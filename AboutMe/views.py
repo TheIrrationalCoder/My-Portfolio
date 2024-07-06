@@ -6,9 +6,9 @@ from .forms import VisitorForm
 def home(request):
     context = {
         'person'    :   Person.objects.filter(name='Aditya Vasudeva').first(),
-        'skill'     :   Skill.objects.all(),
-        'edu'       :   Education.objects.all(),
-        'exp'       :   Experience.objects.all(),
+        'skill'     :   Skill.objects.filter(person_id__name='Aditya Vasudeva'),
+        'edu'       :   Education.objects.filter(person_id__name='Aditya Vasudeva').order_by('-edu_dur'),
+        'exp'       :   Experience.objects.filter(person_id__name='Aditya Vasudeva').order_by('-exp_dur'),
         'cert'      :   Certification.objects.all()
     }
     return render(request, 'AboutMe/index.html', context)

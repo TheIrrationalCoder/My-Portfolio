@@ -103,8 +103,8 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#resume">
-                  Resume
+                <a class="nav-link" href="#timeline">
+                  Timeline
                 </a>
               </li>
               <li class="nav-item">
@@ -133,7 +133,7 @@
             <a href="#services">Services</a>
           </li>
           <li>
-            <a href="#resume">resume</a>
+            <a href="#timeline">resume</a>
           </li>
           <li>
             <a href="#portfolio">Work</a>
@@ -348,31 +348,54 @@
     <!-- About Section End -->
 
     <!-- Services Section Start -->
+
     <section id="services" class="services section-padding">
       <h2 class="section-title wow flipInX" data-wow-delay="0.4s">What I do</h2>
       <div class="container">
         <div class="row">
+
           <!-- Services item -->
           <div class="col-md-6 col-lg-3 col-xs-12">
             <div class="services-item wow fadeInDown" data-wow-delay="0.3s">
               <div class="icon">
-                <i class="icon-grid"></i>
+                <i class="icon-cloud-download"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">Front-end Development</a></h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse condi.</p>
+                <h3><a href="#">
+                    {% for item in skill %}
+                      {% if item.skill_type == 'Technology' %}
+                        {{ item.skill_type }}
+                      {% endif %}
+                    {% endfor %}
+                    </a></h3>
+                    <p>{% for item in skill %}
+                          {% if item.skill_type == 'Technology' %}
+                            {{ item.skill_desc }}
+                          {% endif %}
+                        {% endfor %}
+
+                    </p>
+                </div>
               </div>
             </div>
-          </div>
+
           <!-- Services item -->
           <div class="col-md-6 col-lg-3 col-xs-12">
             <div class="services-item wow fadeInDown" data-wow-delay="0.6s">
               <div class="icon">
-                <i class="icon-layers"></i>
+                <i class="icon-people"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">Graphic Design</a></h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse condi.</p>
+                <h3><a href="#">{% for item in skill %}
+                                  {% if item.skill_type == 'Management' %}
+                                    {{ item.skill_type }}
+                                  {% endif %}
+                                {% endfor %}</a></h3>
+                <p>{% for item in skill %}
+                      {% if item.skill_type == 'Management' %}
+                        {{ item.skill_desc }}
+                      {% endif %}
+                    {% endfor %}</p>
               </div>
             </div>
           </div>
@@ -383,8 +406,16 @@
                 <i class="icon-briefcase"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">Business Branding</a></h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse condi.</p>
+                <h3><a href="#">{% for item in skill %}
+                                  {% if item.skill_type == 'Consulting' %}
+                                    {{ item.skill_type }}
+                                  {% endif %}
+                                {% endfor %}</a></h3>
+                <p>{% for item in skill %}
+                      {% if item.skill_type == 'Consulting' %}
+                        {{ item.skill_desc }}
+                      {% endif %}
+                    {% endfor %}</p>
               </div>
             </div>
           </div>
@@ -392,21 +423,30 @@
           <div class="col-md-6 col-lg-3 col-xs-12">
             <div class="services-item wow fadeInDown" data-wow-delay="1.2s">
               <div class="icon">
-                <i class="icon-bubbles"></i>
+                <i class="icon-emotsmile"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">Consultancy</a></h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse condi.</p>
+                <h3><a href="#">{% for item in skill %}
+                                  {% if item.skill_type == 'Coach' %}
+                                    {{ item.skill_type }}
+                                  {% endif %}
+                                {% endfor %}</a></h3>
+                <p>{% for item in skill %}
+                      {% if item.skill_type == 'Coach' %}
+                        {{ item.skill_desc }}
+                      {% endif %}
+                    {% endfor %}</p>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
     <!-- Services Section End -->
 
-    <!-- Resume Section Start -->
-    <div id="resume" class="section-padding">
+    <!-- Timeline Section Start -->
+    <div id="timeline" class="section-padding">
       <div class="container">
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-6">
@@ -417,25 +457,16 @@
                   <h2 class="timelin-title">Education</h2>
                 </li>
                 <li>
+                  {% for item in edu %}
                   <div class="content-text">
-                    <h3 class="line-title">Bsc In CSE - Yale University</h3>
-                    <span>2012 - 2016</span>
-                    <p class="line-text">Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor.</p>
+                    <h3 class="line-title">
+                        {{ item.edu_name }}</h3>
+                    <span>
+                        {{ item.edu_dur }}</span>
+                    <p class="line-text">
+                        {{ item.edu_desc }}</p>
                   </div>
-                </li>
-                <li>
-                  <div class="content-text">
-                    <h3 class="line-title">Higher Secondary School - San Francisco College</h3>
-                    <span>2010 - 2012</span>
-                    <p class="line-text">Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor.</p>
-                  </div>
-                </li>
-                <li>
-                  <div class="content-text">
-                    <h3 class="line-title">Secondary School - Labratory High School</h3>
-                    <span>2005 - 2010</span>
-                    <p class="line-text">Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor.</p>
-                  </div>
+                  {% endfor %}
                 </li>
               </ul>
             </div>
@@ -448,25 +479,13 @@
                   <h2 class="timelin-title">Experience</h2>
                 </li>
                 <li>
+                  {% for item in exp %}
                   <div class="content-text">
-                    <h3 class="line-title">Art Director - Tesla Inc.</h3>
-                    <span>Jan 2018 - Present</span>
-                    <p class="line-text">Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor.</p>
+                    <h3 class="line-title">{{ item.exp_name }}</h3>
+                    <span>{{ item.exp_dur }}</span>
+                    <p class="line-text">{{ item.exp_desc }}</p>
                   </div>
-                </li>
-                <li>
-                  <div class="content-text">
-                    <h3 class="line-title">UX/UI Designer - Samsung</h3>
-                    <span>Nov 2016 - Dec 2017</span>
-                    <p class="line-text">Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor.</p>
-                  </div>
-                </li>
-                <li>
-                  <div class="content-text">
-                    <h3 class="line-title">Intern UI Designer - UIdeck</h3>
-                    <span>Mar 2015 - Oct 2016</span>
-                    <p class="line-text">Expenses as material breeding insisted building to in. Continual so distrusts pronounce by unwilling listening. Thing do taste on we manor.</p>
-                  </div>
+                  {% endfor %}
                 </li>
               </ul>
             </div>
@@ -474,7 +493,7 @@
         </div>
       </div>
     </div>
-    <!-- Resume Section End -->
+    <!-- Timeline Section End -->
 
     <!-- Portfolio Section -->
     <section id="portfolios" class="section-padding">
@@ -734,7 +753,7 @@
                   <a class="instagram" href="#"><i class="icon-social-google"></i></a>
                 </li>
               </ul>
-              <p>Copyright © 2018 UIdeck All Right Reserved</p>
+              <!--<p>Copyright © 2018 UIdeck All Right Reserved</p> -->
             </div>
           </div>
         </div>
