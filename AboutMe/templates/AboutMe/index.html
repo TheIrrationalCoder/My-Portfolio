@@ -38,12 +38,43 @@
       }
   </style>
 
+<style>
+  .counter {
+      cursor: pointer;
+      transition: background-color 0.3s;
+  }
+
+  .counter:hover {
+      background-color: #15305b; /* Highlight background color on hover */
+  }
+  .no-hover {
+            transition: none; /* Remove transition effect */
+  }
+
+  .no-hover:hover {
+            background-color: transparent; /* Remove hover background color */
+  }
+</style>
+
+<style>
+.border-shadow-img {
+  border: 10px solid white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.border-shadow-img:hover {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+}
+</style>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
 
   </head>
   <body>
@@ -195,7 +226,7 @@
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="img-thumb wow fadeInLeft" data-wow-delay="0.3s">
-              <img class="img-fluid" src="{% static '/img/about/about.jpeg' %}" alt="">
+              <img class="img-fluid border-shadow-img" src="{% static '/img/about/about.jpeg' %}" alt="">
             </div>
           </div> 
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -209,7 +240,7 @@
                   <li><span class="pro-title"> Experience </span> <span class="pro-detail">{{person.exp}}</span></li>
                   <li><span class="pro-title"> Country </span> <span class="pro-detail">{{person.country}}</span></li>
                   <li><span class="pro-title"> Location </span> <span class="pro-detail">{{person.location}}</span></li>
-                  <li><span class="pro-title"> e-mail </span> <span class="pro-detail">{{person.email}}</span></li>
+                  <li><span class="pro-title"> e-mail </span> <span class="pro-detail"><a href="mailto:{{person.email}}">{{person.email}}</a></span></li>
                   <li><span class="pro-title"> Phone </span> <span class="pro-detail">+91 {{person.phone}}</span></li>
                   <li><span class="pro-title"> Address </span> <span class="pro-detail">{{person.address}}</span></li>
                 </ul>
@@ -220,32 +251,42 @@
               </div>
               <div id="popupOverlay" class="overlay-container"> 
                 <div class="popup-box"> 
-                  <h5 style="color: #00b4d9;">Tell me a little about yourself first!</h2> 
+                  <h5 style="color: #000000;">Tell me a little about yourself first!</h2> 
                   
-                  <form id="submitForm" class="form-container" method="post" action="{% url 'submit_form' %}"> 
-                    {% csrf_token %}
-                    <label class="form-label" 
-                        for="name"> 
-                      Name: 
-                    </label> 
-                    <input class="form-input" type="text" 
-                        placeholder="Enter Your Name" 
-                        id="name" name="name" required> 
-                    <label class="form-label" for="email">Email:</label> 
-                    <input class="form-input"
+                  <form class="submitForm" novalidate method="post" action="{% url 'submit_form' %}">
+                    <div class="form-group" style="text-align: left;"> 
+                      {% csrf_token %}
+                      <label for="name"> 
+                        Name: 
+                      </label> 
+                      <input class="form-control" type="text" 
+                          placeholder="Enter Your Name" 
+                          id="name" name="name" required>
+                        <div class="invalid-feedback">
+                            Please enter a valid name.
+                        </div> 
+                    </div>
+                    <div class="form-group" style="text-align: left;">
+                      <label for="email">Email:</label> 
+                      <input class="form-control"
                         type="email" 
                         placeholder="Enter Your Email"
                         id="email" 
                         name="email" required> 
-                    <label class="form-label"> 
-                      Linkedin Handle: 
-                    </label> 
-                    <input class="form-input" type="text" 
-                        placeholder="Optional" 
-                        id="linkedinh" name="linkedinh"> 
-    
+                      <div class="invalid-feedback">
+                          Please enter a valid email.
+                      </div>
+                    </div>
+                    <div class="form-group" style="text-align: left;">
+                      <label> 
+                        Linkedin Handle: 
+                      </label> 
+                      <input class="form-control" type="text" 
+                          placeholder="Optional" 
+                          id="linkedinh" name="linkedinh"> 
+                    </div>
                     <button class="btn-submit" 
-                          type="submit" onclick="ValidatePopup(event)"> 
+                          type="submit"> 
                     Submit & Download 
                     </button> 
                   </form> 
@@ -288,53 +329,57 @@
                   overlayconfirm.classList.toggle('show'); 
                 } 
               </script> 
-              <script>
-                function ValidatePopup(event) {
-                    event.preventDefault();  // Prevent form submission
-            
-                    // Get form and form fields
-                    const form = document.getElementById('submitForm');
-                    const name = form.name.value.trim();
-                    const email = form.email.value.trim();
-                    const linkedinh = form.linkedinh.value.trim();
-            
-                    // Simple validation
-                    if (name === '' || email === '') {
-                        alert('Please fill out all required fields.');
-                        return false;
-                    }
-                    // Email format validation using regular expression
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        alert('Please enter a valid email address.');
-                        return false;
-                    }           
-                    // Get CSRF token
-                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-// If validation passes, send an AJAX request
-                    $.ajax({
-                        type: 'POST',
-                        url: form.action,
-                        data: {
-                            name: name,
-                            email: email,
-                            linkedinh: linkedinh,
-                        },
-                        headers: {
-                          'X-CSRFToken': csrftoken
-                        },
-                        success: function (response) {
-                            // Show the confirmation popup
-                            togglePopupConfirm();
-                        },
-                        error: function (error) {
-                          console.log('Error:',error)  
-                          alert('An error occurred. Please try again.');
+              <script>
+                (function() {
+                  'use strict';
+                  window.addEventListener('load', function() {
+                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                    var forms = document.getElementsByClassName('submitForm');
+                    // Loop over them and prevent submission
+                    Array.prototype.filter.call(forms, function(form) {
+                      form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                
+                        if (form.checkValidity() === false) {
+                          form.classList.add('was-validated');
+                        } else {
+                          form.classList.add('was-validated');
+                
+                          // Get form data
+                          var name = form.querySelector('[name="name"]').value;
+                          var email = form.querySelector('[name="email"]').value;
+                          var linkedinh = form.querySelector('[name="linkedinh"]').value;
+                          const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                          $.ajax({
+                            type: 'POST',
+                            url: form.action,
+                            data: {
+                              name: name,
+                              email: email,
+                              linkedinh: linkedinh,
+                            },
+                            headers: {
+                              'X-CSRFToken': csrftoken
+                            },
+                            success: function(response) {
+                              // Show the confirmation popup
+                              togglePopupConfirm();
+                            },
+                            error: function(error) {
+                              console.log('Error:', error);
+                              alert('An error occurred. Please try again.');
+                            }
+                          });
                         }
+                      }, false);
                     });
-                }
+                  }, false);
+                })();
               </script>
+  
 
             </div>
           </div>   
@@ -366,13 +411,13 @@
                 <i class="icon-cloud-download"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">
+                <h5>
                     {% for item in skill %}
                       {% if item.skill_type == 'Technology' %}
                         {{ item.skill_type }}
                       {% endif %}
                     {% endfor %}
-                    </a></h3>
+                </h5>
                     <p>{% for item in skill %}
                           {% if item.skill_type == 'Technology' %}
                             {{ item.skill_desc }}
@@ -391,11 +436,11 @@
                 <i class="icon-people"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">{% for item in skill %}
+                <h5>{% for item in skill %}
                                   {% if item.skill_type == 'Management' %}
                                     {{ item.skill_type }}
                                   {% endif %}
-                                {% endfor %}</a></h3>
+                                {% endfor %}</h5>
                 <p>{% for item in skill %}
                       {% if item.skill_type == 'Management' %}
                         {{ item.skill_desc }}
@@ -411,11 +456,11 @@
                 <i class="icon-briefcase"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">{% for item in skill %}
+                <h5>{% for item in skill %}
                                   {% if item.skill_type == 'Consulting' %}
                                     {{ item.skill_type }}
                                   {% endif %}
-                                {% endfor %}</a></h3>
+                                {% endfor %}</h5>
                 <p>{% for item in skill %}
                       {% if item.skill_type == 'Consulting' %}
                         {{ item.skill_desc }}
@@ -431,11 +476,11 @@
                 <i class="icon-emotsmile"></i>
               </div>
               <div class="services-content">
-                <h3><a href="#">{% for item in skill %}
+                <h5>{% for item in skill %}
                                   {% if item.skill_type == 'Coach' %}
                                     {{ item.skill_type }}
                                   {% endif %}
-                                {% endfor %}</a></h3>
+                                {% endfor %}</h5>
                 <p>{% for item in skill %}
                       {% if item.skill_type == 'Coach' %}
                         {{ item.skill_desc }}
@@ -507,34 +552,35 @@
           <!-- Counter Item -->
           <div id="A" class="col-md-3 col-sm-6 work-counter-widget text-center">
             <div class="counter wow fadeInDown" data-wow-delay="0.3s">
-              <a id="linkA" role="button">
+              <div id="linkA">
                 <div class="icon"><i class="icon-docs"></i></div>
                 <div class="counterUp">14</div>
                 <p>Certifications</p>
-              </a>
+              </div>
             </div>
           </div>
           <!-- Counter Item -->
           <div id="B" class="col-md-3 col-sm-6 work-counter-widget text-center">
-            <div class="counter wow fadeInDown" data-wow-delay="0.6s">
-              <a id="linkB" role="button">
+            <div class="counter wow fadeInDown no-hover" data-wow-delay="0.6s">
               <div class="icon"><i class="icon-check"></i></div>
               <div class="counterUp">100+</div>
               <p>Projects Done</p>
-              </a>
             </div>
           </div>
           <!-- Counter Item -->
           <div class="col-md-3 col-sm-6 work-counter-widget text-center">
             <div class="counter wow fadeInDown" data-wow-delay="0.9s">
+              <div id="linkB">
               <div class="icon"><i class="icon-diamond"></i></div>
               <div class="counterUp">5</div>
               <p>Awards Received</p>
+              </div>
             </div>
           </div>
           <!-- Counter Item -->
           <div class="col-md-3 col-sm-6 work-counter-widget text-center">
             <div class="counter wow fadeInDown" data-wow-delay="1.2s">
+              <div id="linkC">
               <div class="icon"><i class="icon-heart"></i></div>
               <div class="counterUp">20+</div>
               <p>Happy Clients</p>
@@ -546,65 +592,131 @@
     <!-- Counter Area End-->
 
     <section id="collapseExample1" class="services section-padding collapse">
+      <div class="text-center"><h2>Notable Certifications</h2></div>
       <div class="container">
-            <div>
-              <div class="icon">
-                <i class="icon-cloud-download"></i>
-              </div>
-              <div class="services-content">
-                <h3><a href="#">
-                    Blah
-                    </a></h3>
-                    <p>Blah
-                    </p>
+        <div class="row services-item" style="text-align: left;">
+            <ul>
+              <li class="media">
+                <img class="mr-3" src="{% static '/img/external/Azure.png' %}">
+                <div class="media-body">
+                  <h5 class="mt-0 mb-1" color="">Microsoft Azure</h5>
+                  Azure Data Engineering and Administration
                 </div>
-              </div>
-            </div>
+              </li>
+              <li class="media my-4">
+                <img class="mr-3" src="{% static '/img/external/Databricks.png' %}">
+                <div class="media-body">
+                  <h5 class="mt-0 mb-1">Databricks</h5>
+                  Data Engineering
+                </div>
+              </li>
+              <li class="media my-4">
+                <img class="mr-3" src="{% static '/img/external/Goethe.png' %}">
+                <div class="media-body">
+                  <h5 class="mt-0 mb-1">Goethe Zertifikat</h5>
+                  Elementary German - A1 and A2 levels
+                </div>
+              </li>
+            </ul>
+        </div>      
       </div>
     </section>
 
     <section id="collapseExample2" class="services section-padding collapse">
+      <div class="text-center"><h2>Recent Awards</h2></div>
       <div class="container">
-            <div class="profile-wrapper wow fadeInRight">
-              <div class="icon">
-                <i class="icon-cloud-download"></i>
-              </div>
-              <div class="services-content">
-                <h3><a href="#">
-                    Blah
-                    </a></h3>
-                    <p>blah
+        <div class="row services-item" style="text-align: left;">
+            <ul>
+              <li>
+                <img src="{% static '/img/external/GMI.jpeg' %}" style="max-width: 100%; height: auto;">
+              </li>
+            </ul>
+        </div>      
+      </div>
+    </section>
 
-                    </p>
-                </div>
-              </div>
-            </div>
+    <section id="collapseExample3" class="services section-padding collapse">
+      <div class="text-center"><h2>Notable clients worked with</h2></div>
+      <div class="container">
+        <div class="row services-item">
+          <div class="col-md-4">
+            <img src="{% static '/img/external/pepsico.png' %}" class="img-fluid">
+          </div>
+          <div class="col-md-4">
+            <img src="{% static '/img/external/honeywell.png' %}" class="img-fluid">
+          </div>
+          <div class="col-md-4">
+            <img src="{% static '/img/external/ford.png' %}" class="img-fluid">
+          </div>
+          <div class="col-md-4">
+            <img src="{% static '/img/external/ab-inbev-logo.png' %}" class="img-fluid">
+          </div>
+          <div class="col-md-4">
+            <img src="{% static '/img/external/escorts.png' %}" class="img-fluid">
+          </div>
+          <div class="col-md-4">
+            <img src="{% static '/img/external/nta.png' %}" class="img-fluid">
+          </div>
+        </div>      
       </div>
     </section>
 
     <script>
-      document.getElementById('linkA').addEventListener('click', function () {
+      document.getElementById('linkA').addEventListener('click', function (event) {
+        event.preventDefault();
         var collapse1 = $('#collapseExample1');
         var collapse2 = $('#collapseExample2');
+        var collapse3 = $('#collapseExample3'); // New collapse section
     
-        collapse2.collapse('hide');
-        collapse1.collapse('show');
+        if (collapse2.hasClass('show')) {
+          collapse2.collapse('hide').one('hidden.bs.collapse', function () {
+            collapse1.collapse('show');
+          });
+        } else if (collapse3.hasClass('show')) {
+          collapse3.collapse('hide').one('hidden.bs.collapse', function () {
+            collapse1.collapse('show');
+          });
+        } else {
+          collapse1.collapse('show');
+        }
       });
     
-      document.getElementById('linkB').addEventListener('click', function () {
+      document.getElementById('linkB').addEventListener('click', function (event) {
+        event.preventDefault();
         var collapse1 = $('#collapseExample1');
         var collapse2 = $('#collapseExample2');
+        var collapse3 = $('#collapseExample3'); // New collapse section
     
-        collapse1.collapse('hide');
-        collapse2.collapse('show');
+        if (collapse1.hasClass('show')) {
+          collapse1.collapse('hide').one('hidden.bs.collapse', function () {
+            collapse2.collapse('show');
+          });
+        } else if (collapse3.hasClass('show')) {
+          collapse3.collapse('hide').one('hidden.bs.collapse', function () {
+            collapse2.collapse('show');
+          });
+        } else {
+          collapse2.collapse('show');
+        }
       });
     
-      $('#collapseExample1').on('hidden.bs.collapse', function () {
-        $('#collapseExample2').collapse('show');
-      });
+      document.getElementById('linkC').addEventListener('click', function (event) {
+        event.preventDefault();
+        var collapse1 = $('#collapseExample1');
+        var collapse2 = $('#collapseExample2');
+        var collapse3 = $('#collapseExample3'); // New collapse section
     
-      $('#collapseExample2').on('hidden.bs.collapse', function () {
-        $('#collapseExample1').collapse('show');
+        if (collapse1.hasClass('show')) {
+          collapse1.collapse('hide').one('hidden.bs.collapse', function () {
+            collapse3.collapse('show');
+          });
+        } else if (collapse2.hasClass('show')) {
+          collapse2.collapse('hide').one('hidden.bs.collapse', function () {
+            collapse3.collapse('show');
+          });
+        } else {
+          collapse3.collapse('show');
+        }
       });
     </script>
 
@@ -615,55 +727,120 @@
           <div class="row contact-form-area wow fadeInUp" data-wow-delay="0.4s">          
             <div class="col-md-6 col-lg-6 col-sm-12">
               <div class="contact-block">
-                <h2>Contact Form</h2><br>
-                <div class="text-center">
-                  <h2>You are using Free Version</h2>
-                  <h4>Please, purchase full version to get all features and pages</h4><br>
-                  <b>Including:</b>
-                  <p>- 2 Homepage Variations</p>
-                  <p>- All Elements and Features</p>
-                  <p>- Amazing Slider</p>
-                  <p>- Documentation File</p>
-                  <p>- Quick Support</p>
-                  <p>- Permission to Use in Commercial Projects</p>
-                  <p>- Footer Credit Removal</p>
-                  <p>- SASS Files</p>
-                  <br>
-                  <a href="http://rebrand.ly/meet-me-ud-purchase" target="_blank" class="btn btn-common btn-lg">Purchase Now</a>
-                </div>
+                <ul class="timeline">
+                  <li>
+                    <i class="icon-phone"></i>
+                    <h2 class="timelin-title">Get in touch!</h2>
+                    <small id="emailHelp" class="form-text text-muted">Your details will not be shared with anyone else.</small>
+                  </li>
+                  <div>
+                    <form class="needs-validation" novalidate method="post" action="{% url 'submit_form' %}">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="name">Your name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                        <div class="invalid-feedback">
+                          Please enter your name.
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                        <div class="invalid-feedback">
+                          Please enter a valid email address.
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="linkedinh">Linkedin Handle</label>
+                        <input type="text" class="form-control" id="linkedinh" name="linkedinh" placeholder="Optional">
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                </ul>
               </div>
             </div>
-            <div class="col-md-6 col-lg-6 col-sm-12">
-              <div class="footer-right-area wow fadeIn">
-                <h2>Contact Address</h2>
-                <div class="footer-right-contact">
-                  <div class="single-contact">
-                    <div class="contact-icon">
-                      <i class="fa fa-map-marker"></i>
-                    </div>
-                    <p>San Francisco, CA</p>
-                  </div>
-                  <div class="single-contact">
-                    <div class="contact-icon">
-                      <i class="fa fa-envelope"></i>
-                    </div>
-                    <p><a href="mailto:hello@tom.com">hello@tom.com</a></p>
-                    <p><a href="mailto:tomsaulnier@gmail.com">tomsaulnier@gmail.com</a></p>
-                  </div>
-                  <div class="single-contact">
-                    <div class="contact-icon">
-                      <i class="fa fa-phone"></i>
-                    </div>
-                    <p><a href="#">+ (00) 123 456 789</a></p>
-                    <p><a href="#">+ (00) 123 344 789</a></p>
-                  </div>
-                </div>
+            <div id="contactbgimage" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <div class="img-thumb wow fadeInRight" data-wow-delay="0.3s">
+              <img class="img-fluid border-shadow-img" src="{% static '/img/background/contact_bkg.jpeg' %}" title="Candolim beach, Goa">
               </div>
             </div>
+
+            <div id="popupOverlayConfirm_contact" class="overlay-container"> 
+              <div class="popup-box"> 
+                <h5 style="color: #00b4d9;">Thank you for your submission!</h5> 
+                <button class="btn-close-popup" 
+                  onclick="togglePopupConfirm_contact()"> 
+                  Close 
+                </button>
+              </div> 
+            </div>
+            
           </div>
         </div>
       </div>   
     </section>
+
+    <script>
+      (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+          // Fetch all the forms we want to apply custom Bootstrap validation styles to
+          var forms = document.getElementsByClassName('needs-validation');
+          // Loop over them and prevent submission
+          Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+              event.preventDefault();
+              event.stopPropagation();
+      
+              if (form.checkValidity() === false) {
+                form.classList.add('was-validated');
+              } else {
+                form.classList.add('was-validated');
+      
+                // Get form data
+                var name = form.querySelector('[name="name"]').value;
+                var email = form.querySelector('[name="email"]').value;
+                var linkedinh = form.querySelector('[name="linkedinh"]').value;
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+                $.ajax({
+                  type: 'POST',
+                  url: form.action,
+                  data: {
+                    name: name,
+                    email: email,
+                    linkedinh: linkedinh,
+                  },
+                  headers: {
+                    'X-CSRFToken': csrftoken
+                  },
+                  success: function(response) {
+                    // Show the confirmation popup
+                    togglePopupConfirm_contact();
+                  },
+                  error: function(error) {
+                    console.log('Error:', error);
+                    alert('An error occurred. Please try again.');
+                  }
+                });
+              }
+            }, false);
+          });
+        }, false);
+      })();
+    </script>
+
+    <script> 
+      function togglePopupConfirm_contact() { 
+        const overlayconfirm = document.getElementById('popupOverlayConfirm_contact');
+        const contactbgimage = document.getElementById('contactbgimage');
+
+        overlayconfirm.classList.toggle('show'); 
+
+        
+      } 
+    </script> 
     <!-- Contact Section End -->
 
     <!-- Footer Section Start -->
@@ -672,28 +849,18 @@
         <div class="row">
           <div class="col-md-12">
             <div class="footer-text text-center wow fadeInDown" data-wow-delay="0.3s">
-              <ul class="social-icon">
-                <li>
-                  <a class="facebook" href="#"><i class="icon-social-facebook"></i></a>
-                </li>
-                <li>
-                  <a class="twitter" href="#"><i class="icon-social-twitter"></i></a>
-                </li>
-                <li>
-                  <a class="instagram" href="#"><i class="icon-social-instagram"></i></a>
-                </li>
-                <li>
-                  <a class="instagram" href="#"><i class="icon-social-linkedin"></i></a>
-                </li>
-                <li>
-                  <a class="instagram" href="#"><i class="icon-social-google"></i></a>
-                </li>
-              </ul>
+              <p>Copyright © <span id="currentYear"></span> Aditya Vasudeva. All Rights Reserved.</p>
               <!--<p>Copyright © 2018 UIdeck All Right Reserved</p> -->
             </div>
           </div>
         </div>
       </div>
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var currentYear = new Date().getFullYear();
+        document.getElementById('currentYear').textContent = currentYear;
+       });
+      </script> 
     </footer>
     <!-- Footer Section End -->
 
@@ -701,20 +868,6 @@
     <a href="#" class="back-to-top">
     	<i class="icon-arrow-up"></i>
     </a>
-
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="assets/js/jquery-min.js"></script>
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery.mixitup.js"></script>
-    <script src="assets/js/jquery.counterup.min.js"></script>
-    <script src="assets/js/waypoints.min.js"></script>
-    <script src="assets/js/wow.js"></script>
-    <script src="assets/js/jquery.nav.js"></script>
-    <script src="assets/js/jquery.easing.min.js"></script>  
-    <script src="assets/js/nivo-lightbox.js"></script>
-    <script src="assets/js/jquery.slicknav.js"></script>
-    <script src="assets/js/main.js"></script>
-      
+ 
   </body>
 </html>
